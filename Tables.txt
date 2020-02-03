@@ -1,0 +1,76 @@
+drop table prescription;
+drop table appointment;
+drop table patient;
+drop table doctor;
+
+create table doctor (
+	id int auto_increment,
+	fname varchar(20) not null,
+	lname varchar(20) not null,
+	specialization varchar(30) not null,
+
+	primary key(id)
+);
+
+create table patient (
+	id int auto_increment,
+	phn bigint unsigned not null,
+	fname varchar(20) not null,
+	lname varchar(20) not null,
+	gender enum('M','F') not null,
+	birth date not null,
+	height int(3) unsigned,
+	weight float(4,1) unsigned,
+	allergies varchar(100),
+
+	primary key(id),
+	unique(phn)
+);
+
+create table appointment (
+	id int auto_increment,
+	day_time datetime not null,
+	patient_fk int not null,
+	doctor_fk int not null,
+	status enum('ATTENDED','CANCELLED','') default '' not null,
+
+	primary key(id),
+	unique(day_time,doctor_fk),
+	unique(day_time,patient_fk),
+	foreign key(patient_fk) references patient(id) on delete cascade,
+	foreign key(doctor_fk) references doctor(id) on delete cascade
+);
+
+create table prescription (
+	appointment_fk int,
+	title varchar(30) not null,
+	description varchar(300) not null,
+
+	foreign key(appointment_fk) references appointment(id) on delete cascade
+);
+
+insert into patient (phn,fname,lname,gender,birth,height,weight,allergies) values (1,'a','a','M','2000-01-01',150,160.5,'a');
+insert into patient (phn,fname,lname,gender,birth,height,weight,allergies) values (2,'b','b','M','2000-01-01',150,160.5,'b');
+insert into patient (phn,fname,lname,gender,birth,height,weight,allergies) values (3,'c','c','M','2000-01-01',150,160.5,'c');
+insert into patient (phn,fname,lname,gender,birth,height,weight,allergies) values (4,'d','d','M','2000-01-01',150,160.5,'d');
+insert into patient (phn,fname,lname,gender,birth,height,weight,allergies) values (5,'e','e','M','2000-01-01',150,160.5,'e');
+insert into patient (phn,fname,lname,gender,birth,height,weight,allergies) values (12345,'AnmolPreet','Sandhu','F','1991-08-05',155,110.5,'Just like that!');
+insert into doctor (fname,lname,specialization) values ('aaa','aaa','aaa');
+insert into doctor (fname,lname,specialization) values ('bbb','bbb','bbb');
+insert into doctor (fname,lname,specialization) values ('ccc','ccc','ccc');
+insert into doctor (fname,lname,specialization) values ('ddd','ddd','ddd');
+insert into doctor (fname,lname,specialization) values ('z','z','z');
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 9:00',1,1);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 9:00',2,2);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 9:00',3,3);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 9:30',3,3);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-31 9:00',3,3);
+insert into appointment (day_time,patient_fk,doctor_fk,status) values ('2014-01-01 10:00',3,3,'CANCELLED');
+insert into appointment (day_time,patient_fk,doctor_fk,status) values ('2014-01-01 11:00',3,3,'ATTENDED');
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 10:00',6,5);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 10:30',6,5);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 11:00',6,5);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 11:30',6,5);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 12:00',6,5);
+insert into appointment (day_time,patient_fk,doctor_fk) values ('2014-12-30 12:30',6,5);
+insert into prescription (appointment_fk,title,description) values (7,'title-7','desc-777');
